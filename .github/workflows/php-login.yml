@@ -1,41 +1,44 @@
- 
-name: CI/CD PHP Login  # Nome da automação que vai aparecer no GitHub Actions
+name: CI/CD PHP Login
 
-on:  # Define quando a automação vai ser executada
-  push:  # Sempre que fizer um "git push"...
+on:
+  push:
     branches:
-      - master  # ... na branch "master"
-  pull_request:  # Também roda quando fizer um pull request (PR)
+      - master
+  pull_request:
 
-jobs:  # Aqui definimos os "trabalhos" que serão feitos
-  build:  # Nome do trabalho (pode ser qualquer nome)
-    runs-on: ubuntu-latest  # Sistema operacional onde vai rodar (Linux Ubuntu)
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-    steps:  # Cada "step" é uma etapa da automação
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
 
-      - name: Checkout código  # Nome da etapa
-        uses: actions/checkout@v4  # Ação oficial do GitHub para copiar seu código para a máquina virtual
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring
+          coverage: none
 
-      - name: Configurar PHP  # Etapa para configurar o PHP
-        uses: shivammathur/setup-php@v2  # Ação pronta para instalar o PHP
-        with:  # Parâmetro da ação
-          php-version: '8.2'  # Define a versão do PHP que será usada
+      - name: Verificar versão do PHP
+        run: php -v
 
-      - name: Instalar dependências  # Etapa para instalar dependências do PHP
-        run: |  # Executa comandos no terminal
-          sudo apt-get install -y php-cli php-mbstring  # Instala o PHP na linha de comando e uma extensão útil
-          echo "Dependências instaladas."  # Mensagem para o log
+      - name: Instalar dependências (composer)
+        run: |
+          if [ -f composer.json ]; then
+            composer install --no-interaction --prefer-dist
+          else
+            echo "Nenhum composer.json encontrado, pulando instalação."
+          fi
 
-      - name: Rodar testes  # Etapa para rodar os testes
-        run: |  # Executa comandos no terminal
-          echo "Simulando testes..."  # Apenas uma mensagem no log
-          php -l index.php  # Comando PHP para verificar se o arquivo index.php não tem erros de sintaxe
+      - name: Rodar testes
+        run: |
+          echo "Simulando testes..."
+          php -l index.php
 
-      - name: Build do projeto  # Etapa de "build" (montar o projeto)
-        run: |  # Executa comandos no terminal
-          echo "Build realizado com sucesso!"  # Aqui só estamos simulando, com uma mensagem
+      - name: Build do projeto
+        run: echo "Build realizado com sucesso!"
 
-      - name: Deploy (simulado)  # Etapa de deploy (envio para produção)
-        run: |  # Executa comandos no terminal
-          echo "Realizando deploy..."  # Só simula o deploy com uma mensagem
- 
+      - name: Deploy (simulado)
+        run: echo "Realizando deploy..."
