@@ -1,44 +1,11 @@
-name: CI/CD PHP Login
+ 
+name: CI via Workflow Reutilizável.
 
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
   pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout código
-        uses: actions/checkout@v4
-
-      - name: Configurar PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '8.2'
-          extensions: mbstring
-          coverage: none
-
-      - name: Verificar versão do PHP
-        run: php -v
-
-      - name: Instalar dependências (composer)
-        run: |
-          if [ -f composer.json ]; then
-            composer install --no-interaction --prefer-dist
-          else
-            echo "Nenhum composer.json encontrado, pulando instalação."
-          fi
-
-      - name: Rodar testes
-        run: |
-          echo "Simulando testes..."
-          php -l index.php
-
-      - name: Build do projeto
-        run: echo "Build realizado com sucesso!"
-
-      - name: Deploy (simulado)
-        run: echo "Realizando deploy..."
+  login:
+    uses: Kstxiz/php-workflows/.github/workflows/login.yml@master
