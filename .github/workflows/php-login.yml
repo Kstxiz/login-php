@@ -8,4 +8,4 @@ on:
 
 jobs:
   login:
-    uses: Kstxiz/php-workflows/.github/workflows/login.yml@master
+    uses: Kstxiz/php-workflows/.github/workflows/php-login.yml@master
